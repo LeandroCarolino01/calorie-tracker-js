@@ -13,14 +13,17 @@ const ItemCtrl = (function(){
     const data = {
         items: [
             {id: 0, name: 'Steak Dinner', calories: 1200},
-            {id: 0, name: 'burguer', calories: 120},
-            {id: 0, name: 'cake', calories: 130}
+            {id: 1, name: 'burguer', calories: 120},
+            {id: 2, name: 'cake', calories: 130}
         ],
         currentItem: null,
         totalCalories: 0
     }
     // public methods
     return {
+        getItems: function(){
+            return data.items;
+        },
         logData: function(){
             return data;
         }
@@ -30,9 +33,28 @@ const ItemCtrl = (function(){
 
 // ui controller
 const UICtrl = (function(){
+    const UISelectors = {
+        itemList: '#item-list'
+    }
     // public methods
     return {
+        populateItemList: function(items){
+            let html = '';
 
+            items.forEach(function(item){
+                html += `
+               <li class="collection-item" id="item-${item.id}">
+                    <strong>${item.name}: </strong><em>${item.calories}</em>
+                    <a href="#" class="secondary-content">
+                        <i class="edit-item fa fa-pencil"></i>
+                    </a>
+                </li>
+                `
+            });
+
+            // Insert list items
+            document.querySelector(UISelectors.itemList).innerHTML = html;
+        }
     }
 })();
 
@@ -42,7 +64,11 @@ const App = (function(ItemCtrl, UICtrl){
     //public methods
     return {
         init: function(){
-            console.log('Initializing App...');
+            // Fetch items from data structure
+            const items = ItemCtrl.getItems();
+
+            // populate list with items
+            UICtrl.populateItemList(items);
         }
     }
 })(ItemCtrl, UICtrl);
